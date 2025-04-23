@@ -7,7 +7,6 @@ import edu.praktismp.gamesessiontracker.R
 import edu.praktismp.gamesessiontracker.data.SessionDatabaseHelper
 
 class StatsActivity : AppCompatActivity() {
-
     private lateinit var totalDurationText: TextView
     private lateinit var averageDurationText: TextView
     private lateinit var sessionCountText: TextView
