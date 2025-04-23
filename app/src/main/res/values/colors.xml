@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primaryColor">#4CAF50</color>         <!-- Hijau -->
+    <color name="purple_500">#6200EE</color>
+    <color name="secondaryColor">#2196F3</color>       <!-- Biru -->
+    <color name="tertiaryColor">#FF9800</color>        <!-- Oranye -->
+    <color name="primaryText">#000000</color>
+</resources>
