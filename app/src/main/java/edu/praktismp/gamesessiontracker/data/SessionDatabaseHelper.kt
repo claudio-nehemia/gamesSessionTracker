@@ -65,4 +65,28 @@ class SessionDatabaseHelper(context: Context) : SQLiteOpenHelper(
         private const val DATABASE_NAME = "sessions.db"
         private const val DATABASE_VERSION = 1
     }
+
+    fun getAverageDurationPerDay(): Map<String, Double> {
+        val db = readableDatabase
+        val averages = LinkedHashMap<String, Double>()
+
+        val query = """
+        SELECT date, 
+               AVG(duration) as average 
+        FROM sessions 
+        GROUP BY date 
+        ORDER BY date ASC
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        while (cursor.moveToNext()) {
+            val date = cursor.getString(0)
+            val average = cursor.getDouble(1)
+            averages[date] = average
+        }
+        cursor.close()
+        return averages
+    }
+
+
 }

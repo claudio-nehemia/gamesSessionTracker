@@ -7,4 +7,6 @@
     <color name="secondaryColor">#2196F3</color>       <!-- Biru -->
     <color name="tertiaryColor">#FF9800</color>        <!-- Oranye -->
     <color name="primaryText">#000000</color>
+    <color name="chart_text_color">#333333</color>
+
 </resources>

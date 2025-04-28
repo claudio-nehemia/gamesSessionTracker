@@ -46,35 +46,45 @@ class StatsActivity : AppCompatActivity() {
     }
 
     private fun setupLineChart() {
-        val total = dbHelper.getTotalDuration()
-        val average = dbHelper.getAverageDuration()
-        val count = dbHelper.getSessionCount()
+        val averagesMap = dbHelper.getAverageDurationPerDay()
+        val dates = averagesMap.keys.toList()
+        val averages = averagesMap.values.toList()
 
         val entries = ArrayList<Entry>()
-        entries.add(Entry(0f, total.toFloat()))
-        entries.add(Entry(1f, average.toFloat()))
-        entries.add(Entry(2f, count.toFloat()))
+        dates.forEachIndexed { index, _ ->
+            entries.add(Entry(index.toFloat(), averages[index].toFloat()))
+        }
 
-        val dataSet = LineDataSet(entries, "Statistik")
-        dataSet.color = resources.getColor(R.color.purple_500, theme)
-        dataSet.valueTextColor = resources.getColor(R.color.black, theme)
-        dataSet.lineWidth = 2f
-        dataSet.circleRadius = 5f
-        dataSet.setCircleColor(resources.getColor(R.color.purple_500, theme))
+        val dataSet = LineDataSet(entries, "Rata-rata Durasi Harian (menit)").apply {
+            color = resources.getColor(R.color.purple_500, theme)
+            valueTextColor = resources.getColor(R.color.black, theme)
+            lineWidth = 2f
+            circleRadius = 5f
+            setCircleColor(resources.getColor(R.color.purple_500, theme))
+            mode = LineDataSet.Mode.CUBIC_BEZIER
+        }
 
-        val lineData = LineData(dataSet)
+        lineChart.apply {
+            data = LineData(dataSet)
+            xAxis.run {
+                valueFormatter = IndexAxisValueFormatter(dates)
+                position = XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                labelCount = dates.size
+                setAvoidFirstLastClipping(true)
+            }
 
-        lineChart.data = lineData
-        lineChart.description.isEnabled = false
+            axisLeft.run {
+                axisMinimum = 0f
+                granularity = 30f
+            }
 
-        val xAxis = lineChart.xAxis
-        xAxis.valueFormatter = IndexAxisValueFormatter(listOf("Total", "Rata2", "Jumlah"))
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.granularity = 1f
-        xAxis.setDrawGridLines(false)
-
-        lineChart.axisLeft.setDrawGridLines(false)
-        lineChart.axisRight.isEnabled = false
-        lineChart.invalidate() // Refresh chart
+            axisRight.isEnabled = false
+            description.isEnabled = false
+            setTouchEnabled(true)
+            setPinchZoom(true)
+            animateY(1000)
+            invalidate()
+        }
     }
 }
