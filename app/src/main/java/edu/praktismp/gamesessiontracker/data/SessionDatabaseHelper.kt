@@ -61,32 +61,80 @@ class SessionDatabaseHelper(context: Context) : SQLiteOpenHelper(
         return count
     }
 
+    // SessionDatabaseHelper.kt
     companion object {
         private const val DATABASE_NAME = "sessions.db"
         private const val DATABASE_VERSION = 1
+        const val TIME_RANGE_DAILY = "daily"
+        const val TIME_RANGE_WEEKLY = "weekly"
+        const val TIME_RANGE_HOURLY = "hourly"
     }
 
-    fun getAverageDurationPerDay(): Map<String, Double> {
+    // Fungsi baru untuk mendapatkan data statistik dengan filter
+    fun getFilteredStats(gameName: String?, timeRange: String): Map<String, Double> {
         val db = readableDatabase
-        val averages = LinkedHashMap<String, Double>()
+        val stats = LinkedHashMap<String, Double>()
+
+        // Build SQL query based on filters
+        val whereClause = buildWhereClause(gameName, timeRange)
+        val groupByClause = buildGroupByClause(timeRange)
 
         val query = """
-        SELECT date, 
-               AVG(duration) as average 
-        FROM sessions 
-        GROUP BY date 
+        SELECT 
+            ${if (timeRange == TIME_RANGE_HOURLY) "strftime('%H', startTime) as time_group" else "date"}
+            , AVG(duration) as average
+        FROM sessions
+        $whereClause
+        GROUP BY ${if (timeRange == TIME_RANGE_HOURLY) "time_group" else "date"}
+        $groupByClause
         ORDER BY date ASC
     """.trimIndent()
 
         val cursor = db.rawQuery(query, null)
         while (cursor.moveToNext()) {
-            val date = cursor.getString(0)
-            val average = cursor.getDouble(1)
-            averages[date] = average
+            val key = cursor.getString(0)
+            val value = cursor.getDouble(1)
+            stats[key] = value
         }
         cursor.close()
-        return averages
+        return stats
     }
+
+    private fun buildWhereClause(gameName: String?, timeRange: String): String {
+        val clauses = mutableListOf<String>()
+
+        if (!gameName.isNullOrBlank()) {
+            clauses.add("gameName = '$gameName'")
+        }
+
+        if (timeRange == TIME_RANGE_WEEKLY) {
+            clauses.add("strftime('%W', date) = strftime('%W', 'now')")
+        }
+
+        return if (clauses.isNotEmpty()) "WHERE ${clauses.joinToString(" AND ")}" else ""
+    }
+
+    private fun buildGroupByClause(timeRange: String): String {
+        return if (timeRange == TIME_RANGE_WEEKLY) {
+            "HAVING COUNT(*) > 0" // Memastikan ada data untuk minggu tersebut
+        } else {
+            ""
+        }
+    }
+
+    // Fungsi untuk mendapatkan daftar game
+    fun getGameNames(): List<String> {
+        val db = readableDatabase
+        val games = mutableListOf<String>()
+        val cursor = db.rawQuery("SELECT DISTINCT gameName FROM sessions", null)
+        while (cursor.moveToNext()) {
+            games.add(cursor.getString(0))
+        }
+        cursor.close()
+        return games
+    }
+
+
 
 
 }
