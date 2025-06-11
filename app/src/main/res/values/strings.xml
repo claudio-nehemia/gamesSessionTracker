@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">gamesessiontracker</string>
+    <string name="app_name">GameSessionTracker</string>
+
+    <string-array name="filter_options_per_day">
+        <item>Durasi per Hari</item>
+        <item>Jumlah Sesi per Hari</item>
+        <!-- Tambahkan opsi lainnya jika diperlukan -->
+    </string-array>
 </resources>

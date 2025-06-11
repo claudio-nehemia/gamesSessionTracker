@@ -1,49 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#F9F9F9">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Statistik Durasi"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#333333"
-        android:layout_marginBottom="12dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#DDDDDD"
-        android:layout_marginBottom="8dp" />
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/totalDurationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Durasi: 0 menit"
+        android:text="Total Durasi:"
         android:textSize="18sp"
-        android:textColor="#000000"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/averageDurationText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rata-rata Durasi: 0 menit"
+        android:text="Rata-rata Durasi:"
         android:textSize="18sp"
-        android:textColor="#000000"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/sessionCountText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Jumlah Sesi: 0"
+        android:text="Jumlah Sesi:"
         android:textSize="18sp"
-        android:textColor="#000000" />
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Filter Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Spinner
+            android:id="@+id/gameSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"/>
+
+        <Spinner
+            android:id="@+id/timeRangeSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnApplyFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Terapkan Filter"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Grafik LineChart (HANYA SATU ELEMEN) -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnApplyFilter"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </LinearLayout>
